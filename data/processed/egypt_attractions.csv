@@ -1,0 +1,31 @@
+id,name,location,category,duration_hours,cost_level,opening_period,wheelchair_accessible,indoor_outdoor,tags
+1,Giza Pyramids,Giza,Pharaonic,3,Medium,Morning,Yes,Outdoor,history ancient monuments wonders desert archaeology
+2,Egyptian Museum Tahrir,Cairo,Pharaonic,2,Low,Full Day,Yes,Indoor,history artifacts mummies statues museum
+3,Khan El Khalili,Cairo,Islamic,3,Low,Full Day,No,Outdoor,shopping history market culture street traditional
+4,Cairo Citadel,Cairo,Islamic,3,Medium,Morning,No,Outdoor,history views mosque fortress architecture
+5,NMEC Fustat,Cairo,Pharaonic,3,Medium,Full Day,Yes,Indoor,history mummies modern museum culture
+6,Hanging Church,Cairo,Coptic,1,Low,Morning,No,Indoor,history religion architecture coptic old cairo
+7,Grand Egyptian Museum,Giza,Pharaonic,4,High,Full Day,Yes,Indoor,history modern artifacts statues museum
+8,Al-Azhar Park,Cairo,Nature,3,Low,Evening,Yes,Outdoor,nature views relaxation family green park
+9,Baron Empain Palace,Cairo,Modern,2,Medium,Morning,Yes,Indoor,architecture history photography palace
+10,Saqqara,Giza,Pharaonic,4,Medium,Morning,No,Outdoor,history ancient archaeology desert pyramid
+11,Cairo Tower,Cairo,Modern,2,Medium,Evening,Yes,Both,views city skyline landmark photography
+12,Al-Muizz Street,Cairo,Islamic,3,Low,Evening,No,Outdoor,history walking architecture mosques street
+13,Abdeen Palace Museum,Cairo,Modern,2,Medium,Morning,Yes,Indoor,history royal museum palace arms
+14,Museum of Islamic Art,Cairo,Islamic,2,Low,Morning,Yes,Indoor,history art calligraphy ceramics museum
+15,Coptic Museum,Cairo,Coptic,2,Low,Morning,Yes,Indoor,history coptic art manuscripts museum
+16,Sultan Hassan Mosque,Cairo,Islamic,1,Low,Morning,No,Indoor,history architecture Mamluk mosque
+17,Ibn Tulun Mosque,Cairo,Islamic,1,Low,Morning,No,Both,history architecture minaret ancient mosque
+18,Manial Palace,Cairo,Modern,2,Medium,Morning,No,Both,royal history gardens architecture palace
+19,Al-Azhar Mosque,Cairo,Islamic,1,Low,Full Day,No,Both,history religion architecture islamic mosque
+20,Dahshur,Giza,Pharaonic,3,Medium,Morning,No,Outdoor,history ancient desert pyramids archaeology
+21,Great Sphinx,Giza,Pharaonic,1,Medium,Morning,Yes,Outdoor,history ancient monument sculpture archaeology
+22,Bab Zuweila,Cairo,Islamic,1,Low,Morning,No,Outdoor,history gates views architecture medieval
+23,Gayer-Anderson Museum,Cairo,Islamic,2,Low,Morning,No,Indoor,history traditional house oriental museum
+24,Aquarium Grotto Garden,Cairo,Nature,2,Low,Morning,Yes,Outdoor,nature plants trees relaxation garden
+25,Pharaonic Village,Giza,Pharaonic,3,High,Full Day,Yes,Both,history family show boat entertainment
+26,Nilometer Manial,Cairo,Islamic,1,Low,Morning,No,Outdoor,history river water engineering ancient
+27,Al-Rifa'i Mosque,Cairo,Islamic,1,Low,Morning,No,Indoor,history royal tombs architecture mosque
+28,Memphis Open-Air Museum,Giza,Pharaonic,2,Medium,Morning,Yes,Outdoor,history ancient statues museum archaeology
+29,Child Museum,Cairo,Modern,2,Medium,Morning,Yes,Indoor,family science interactive kids museum
+30,Ben Ezra Synagogue,Cairo,Jewish,1,Low,Morning,Yes,Indoor,history religion heritage old cairo
