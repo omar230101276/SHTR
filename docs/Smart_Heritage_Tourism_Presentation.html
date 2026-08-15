@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Smart Heritage Tourism Recommender - Project Presentation</title>
+<style>
+  :root {
+    --bg-dark: #0f172a;
+    --card-bg: rgba(30, 41, 59, 0.85);
+    --accent-blue: #38bdf8;
+    --accent-green: #34d399;
+    --accent-amber: #fbbf24;
+    --accent-pink: #f472b6;
+    --text-main: #f8fafc;
+    --text-muted: #94a3b8;
+    --border-color: rgba(255, 255, 255, 0.1);
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+    background: var(--bg-dark);
+    color: var(--text-main);
+    overflow: hidden;
+    height: 100vh;
+    width: 100vw;
+  }
+
+  /* Presentation Container */
+  .deck-container {
+    width: 100%;
+    height: 100vh;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .slide {
+    position: absolute;
+    width: 90%;
+    max-width: 1200px;
+    height: 85vh;
+    background: var(--card-bg);
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    padding: 40px;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(20px) scale(0.98);
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .slide.active {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0) scale(1);
+  }
+
+  /* Slide Header */
+  .slide-header {
+    margin-bottom: 24px;
+  }
+
+  .slide-title {
+    font-size: 24pt;
+    font-weight: 700;
+    color: var(--text-main);
+    letter-spacing: -0.5px;
+    margin-bottom: 6px;
+  }
+
+  .slide-subtitle {
+    font-size: 12pt;
+    color: var(--accent-blue);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  /* Content Layouts */
+  .slide-body {
+    flex: 1;
+    display: flex;
+    gap: 24px;
+    overflow-y: auto;
+  }
+
+  .grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    width: 100%;
+  }
+
+  .grid-4 {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    width: 100%;
+  }
+
+  .content-card {
+    background: rgba(15, 23, 42, 0.6);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+  }
+
+  .content-card h3 {
+    font-size: 13pt;
+    color: var(--accent-blue);
+    margin-bottom: 14px;
+    border-bottom: 1px dashed var(--border-color);
+    padding-bottom: 8px;
+  }
+
+  .content-card ul {
+    list-style: none;
+  }
+
+  .content-card li {
+    font-size: 10.5pt;
+    color: var(--text-muted);
+    margin-bottom: 12px;
+    line-height: 1.5;
+  }
+
+  .content-card li strong {
+    color: var(--text-main);
+  }
+
+  /* Math & Code Boxes */
+  .math-card {
+    background: linear-gradient(135deg, rgba(56, 189, 248, 0.1) 0%, rgba(52, 211, 153, 0.1) 100%);
+    border: 1px solid var(--accent-blue);
+    border-radius: 12px;
+    padding: 24px;
+    text-align: center;
+    margin: 16px 0;
+  }
+
+  .math-formula {
+    font-family: 'Georgia', serif;
+    font-size: 15pt;
+    font-style: italic;
+    color: var(--accent-green);
+    margin-top: 8px;
+  }
+
+  .code-pre {
+    background: #090d16;
+    border-radius: 8px;
+    padding: 16px;
+    font-family: 'Consolas', monospace;
+    font-size: 9pt;
+    color: #e2e8f0;
+    line-height: 1.4;
+    white-space: pre-wrap;
+  }
+
+  /* Tables */
+  .pres-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+    font-size: 9.5pt;
+  }
+
+  .pres-table th {
+    background: rgba(56, 189, 248, 0.15);
+    color: var(--accent-blue);
+    padding: 10px 12px;
+    text-align: left;
+    border-bottom: 2px solid var(--accent-blue);
+  }
+
+  .pres-table td {
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--border-color);
+    color: var(--text-muted);
+  }
+
+  .badge-pass {
+    background: rgba(52, 211, 153, 0.2);
+    color: var(--accent-green);
+    font-weight: bold;
+    padding: 2px 8px;
+    border-radius: 4px;
+  }
+
+  /* Slide Footer & Navigation */
+  .slide-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+    padding-top: 14px;
+    border-top: 1px solid var(--border-color);
+    font-size: 9pt;
+    color: var(--text-muted);
+  }
+
+  .nav-controls {
+    position: fixed;
+    bottom: 24px;
+    right: 32px;
+    display: flex;
+    gap: 12px;
+    z-index: 100;
+  }
+
+  .nav-btn {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    color: var(--text-main);
+    padding: 10px 18px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.2s;
+  }
+
+  .nav-btn:hover {
+    background: var(--accent-blue);
+    color: var(--bg-dark);
+  }
+</style>
+</head>
+<body>
+
+<div class="deck-container">
+
+  <!-- SLIDE 1: Title Slide -->
+  <div class="slide active">
+    <div class="slide-header">
+      <div class="slide-subtitle">CET 251 Artificial Intelligence | Project D4</div>
+      <div class="slide-title" style="font-size: 32pt; margin-top: 12px;">Smart Heritage Tourism Recommender</div>
+    </div>
+    <div class="slide-body">
+      <div class="content-card" style="width: 100%; background: linear-gradient(135deg, rgba(30, 41, 59, 0.9) 0%, rgba(15, 23, 42, 0.9) 100%);">
+        <h3 style="font-size: 16pt; color: var(--accent-blue);">AI-Powered Multi-Constraint Recommendation Engine</h3>
+        <p style="font-size: 12pt; color: var(--text-muted); margin-bottom: 28px;">Harmonizing Hard Constraint Satisfaction Problems (CSP) with TF-IDF Vector Similarity for Heritage Sites in Cairo &amp; Giza.</p>
+
+        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-top: 20px;">
+          <div>
+            <div style="color: var(--accent-green); font-weight: bold; font-size: 11pt;">Course &amp; Academic Supervision</div>
+            <div style="color: var(--text-main); font-size: 11pt; margin-top: 4px;">CET 251 – Artificial Intelligence (2026)</div>
+            <div style="color: var(--text-muted); font-size: 10pt;">Instructor: Dr. Mohamed Aly Saleh</div>
+          </div>
+          <div>
+            <div style="color: var(--accent-blue); font-weight: bold; font-size: 11pt;">Project Team Members</div>
+            <div style="color: var(--text-main); font-size: 10.5pt; margin-top: 4px;">
+              Reyad Hamdy (240103466)<br>
+              Omar Abdelghany (230101276)<br>
+              Kirellos Samir (230102253)
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="slide-footer">
+      <span>Smart Heritage Tourism Recommender (SHTR v1.0)</span>
+      <span>Slide 1 / 10</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 2: Problem & Objective -->
+  <div class="slide">
+    <div class="slide-header">
+      <div class="slide-subtitle">Motivation &amp; Objectives</div>
+      <div class="slide-title">The Tourism Constraint Challenge</div>
+    </div>
+    <div class="slide-body">
+      <div class="grid-2">
+        <div class="content-card">
+          <h3>The Problem Space</h3>
+          <ul>
+            <li><strong>Information Overload:</strong> Visitors in Cairo &amp; Giza face hundreds of attractions across 5,000+ years of history.</li>
+            <li><strong>Conflicting Constraints:</strong> Visitors operate under strict budgets, limited travel hours, mobility needs, and operating windows.</li>
+            <li><strong>Search Engine Gaps:</strong> Standard search tools fail to enforce hard constraints alongside personalized tag similarity.</li>
+          </ul>
+        </div>
+        <div class="content-card">
+          <h3>SHTR Project Objective</h3>
+          <ul>
+            <li><strong>Constraint Satisfaction Engine:</strong> Hard boolean filters guarantee zero violations for budget, hours, location, and accessibility.</li>
+            <li><strong>Content-Based Matching:</strong> TF-IDF Vectorization &amp; Cosine Similarity match user interest keywords with attraction tags.</li>
+            <li><strong>Category Diversity:</strong> Category deduplication ensures top 3 recommendations span distinct heritage domains.</li>
+            <li><strong>Cold-Start Baseline:</strong> Popularity-ranked baseline model handles queries without specified tags.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="slide-footer">
+      <span>SHTR Final Technical Presentation</span>
+      <span>Slide 2 / 10</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 3: Dataset Overview -->
+  <div class="slide">
+    <div class="slide-header">
+      <div class="slide-subtitle">Data &amp; Preprocessing</div>
+      <div class="slide-title">Curated Cairo &amp; Giza Dataset</div>
+    </div>
+    <div class="slide-body">
+      <div class="grid-4">
+        <div class="content-card">
+          <h3 style="color: var(--accent-green);">40 Sites</h3>
+          <p style="font-size: 10pt; color: var(--text-muted);">Curated heritage sites in Cairo and Giza compiled from Ministry of Tourism records.</p>
+        </div>
+        <div class="content-card">
+          <h3 style="color: var(--accent-blue);">7 Categories</h3>
+          <p style="font-size: 10pt; color: var(--text-muted);">Pharaonic, Islamic, Coptic, Modern, Nature, Culture, and Jewish attractions.</p>
+        </div>
+        <div class="content-card">
+          <h3 style="color: var(--accent-amber);">10 Fields</h3>
+          <p style="font-size: 10pt; color: var(--text-muted);">Location, cost tier, duration, opening window, accessibility flag, and tags.</p>
+        </div>
+        <div class="content-card">
+          <h3 style="color: var(--accent-pink);">13 Tag Options</h3>
+          <p style="font-size: 10pt; color: var(--text-muted);">Keyword tags enabling high-dimensional vector similarity matching.</p>
+        </div>
+      </div>
+    </div>
+    <div class="slide-footer">
+      <span>SHTR Final Technical Presentation</span>
+      <span>Slide 3 / 10</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 4: Dual Engine Architecture -->
+  <div class="slide">
+    <div class="slide-header">
+      <div class="slide-subtitle">AI Architecture</div>
+      <div class="slide-title">Dual-Layer Recommendation System</div>
+    </div>
+    <div class="slide-body">
+      <div class="grid-2">
+        <div class="content-card">
+          <h3>Layer 1: Hard Constraint Engine (CSP)</h3>
+          <ul>
+            <li><strong>Pre-Scoring Filtering:</strong> Evaluates boolean rules before TF-IDF vectorization to eliminate invalid candidates.</li>
+            <li><strong>Location Match:</strong> Strictly filters Cairo vs Giza locations.</li>
+            <li><strong>Budget Cap:</strong> Enforces cost level threshold (Low: 1, Medium: 2, High: 3).</li>
+            <li><strong>Time &amp; Period:</strong> Enforces visit duration &lt;= max hours and operational period.</li>
+          </ul>
+        </div>
+        <div class="content-card">
+          <h3>Layer 2: TF-IDF + Cosine Similarity</h3>
+          <ul>
+            <li><strong>Vector Space Model:</strong> Transforms interest tags and attraction keywords into sparse TF-IDF feature vectors.</li>
+            <li><strong>Cosine Similarity Scoring:</strong> Measures cosine angle S &isin; [0, 1] between user query and item vectors.</li>
+            <li><strong>Diversity Deduplication:</strong> Selects Top 3 recommendations from unique categories.</li>
+            <li><strong>Baseline Fallback:</strong> Seamless fallback to popularity model when no tags are checked.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="slide-footer">
+      <span>SHTR Final Technical Presentation</span>
+      <span>Slide 4 / 10</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 5: Mathematical Formulation -->
+  <div class="slide">
+    <div class="slide-header">
+      <div class="slide-subtitle">Mathematical Formulation</div>
+      <div class="slide-title">AI Formulas &amp; Scoring Mechanics</div>
+    </div>
+    <div class="slide-body" style="flex-direction: column;">
+      <div class="math-card">
+        <div style="color: var(--accent-blue); font-weight: bold;">1. TF-IDF Term Weighting Formula</div>
+        <div class="math-formula">TF-IDF(t, d, D) = TF(t, d) &times; log( N / |{d &isin; D : t &isin; d}| )</div>
+      </div>
+      <div class="math-card" style="border-color: var(--accent-green);">
+        <div style="color: var(--accent-green); font-weight: bold;">2. Cosine Similarity Vector Angle Formula</div>
+        <div class="math-formula" style="color: var(--accent-blue);">CosineSimilarity(v_user, v_item) = ( v_user &middot; v_item ) / ( ||v_user|| &times; ||v_item|| )</div>
+      </div>
+    </div>
+    <div class="slide-footer">
+      <span>SHTR Final Technical Presentation</span>
+      <span>Slide 5 / 10</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 6: Workflow Art Diagram -->
+  <div class="slide">
+    <div class="slide-header">
+      <div class="slide-subtitle">System Design</div>
+      <div class="slide-title">4-Phase Operational Workflow</div>
+    </div>
+    <div class="slide-body">
+      <div class="grid-4">
+        <div class="content-card" style="border-top: 3px solid var(--accent-blue);">
+          <h3 style="color: var(--accent-blue);">Phase 1: Input</h3>
+          <ul>
+            <li>1. Load CSV (40 sites)</li>
+            <li>2. Read sidebar filters &amp; interest tags</li>
+          </ul>
+        </div>
+        <div class="content-card" style="border-top: 3px solid var(--accent-green);">
+          <h3 style="color: var(--accent-green);">Phase 2: CSP Engine</h3>
+          <ul>
+            <li>3. Apply hard boolean filters</li>
+            <li>4. Empty set check &amp; warning</li>
+            <li>5. Route empty tags to baseline</li>
+          </ul>
+        </div>
+        <div class="content-card" style="border-top: 3px solid var(--accent-amber);">
+          <h3 style="color: var(--accent-amber);">Phase 3: TF-IDF Engine</h3>
+          <ul>
+            <li>6. Load tfidf_vectorizer.joblib</li>
+            <li>7. Compute Cosine Similarity</li>
+            <li>8. Sort scores descending</li>
+          </ul>
+        </div>
+        <div class="content-card" style="border-top: 3px solid var(--accent-pink);">
+          <h3 style="color: var(--accent-pink);">Phase 4: UI Output</h3>
+          <ul>
+            <li>9. Deduplicate categories (Top 3)</li>
+            <li>10. Render Top 3, baseline &amp; 100% FMR</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="slide-footer">
+      <span>SHTR Final Technical Presentation</span>
+      <span>Slide 6 / 10</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 7: Software Architecture -->
+  <div class="slide">
+    <div class="slide-header">
+      <div class="slide-subtitle">Software Engineering</div>
+      <div class="slide-title">Modular Python Codebase Architecture</div>
+    </div>
+    <div class="slide-body">
+      <div class="grid-2">
+        <div class="content-card">
+          <h3>Modular Package Structure</h3>
+          <ul>
+            <li><strong>src/data_processing.py:</strong> CSV loading &amp; hard constraint boolean filters.</li>
+            <li><strong>src/model.py:</strong> TF-IDF Cosine Similarity engine &amp; popularity baseline.</li>
+            <li><strong>src/evaluation.py:</strong> Live Filter Match Rate (FMR) calculation.</li>
+            <li><strong>src/train.py:</strong> Offline model training &amp; artifact exporter.</li>
+          </ul>
+        </div>
+        <div class="content-card">
+          <h3>Application &amp; Artifacts</h3>
+          <ul>
+            <li><strong>models/tfidf_vectorizer.joblib:</strong> Pre-trained vectorizer artifact for zero-latency inference.</li>
+            <li><strong>app.py:</strong> Responsive Streamlit web interface.</li>
+            <li><strong>run.py / run.bat:</strong> 1-click Python &amp; Windows launchers.</li>
+            <li><strong>notebooks/01_recommender_pipeline.ipynb:</strong> 7-step lab pipeline notebook.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="slide-footer">
+      <span>SHTR Final Technical Presentation</span>
+      <span>Slide 7 / 10</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 8: Evaluation & Results -->
+  <div class="slide">
+    <div class="slide-header">
+      <div class="slide-subtitle">Evaluation &amp; Results</div>
+      <div class="slide-title">Filter Match Rate (FMR) &amp; Test Persona Scenarios</div>
+    </div>
+    <div class="slide-body" style="flex-direction: column;">
+      <div style="background: rgba(52, 211, 153, 0.1); border: 1px solid var(--accent-green); border-radius: 8px; padding: 12px 18px; margin-bottom: 12px;">
+        <span style="color: var(--accent-green); font-weight: bold;">Quantitative Metric:</span> Filter Match Rate = (Recommended items satisfying hard filters / Total recommended) &times; 100% &nbsp;|&nbsp; <strong>Target: 100.0% &nbsp;&rarr;&nbsp; Achieved: 100.0%</strong>
+      </div>
+      <table class="pres-table">
+        <thead>
+          <tr>
+            <th>Persona / Scenario</th>
+            <th>Active Interest Tags</th>
+            <th>Top Recommendation</th>
+            <th>Similarity Score</th>
+            <th>Filter Match Rate</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>History &amp; Museum</td>
+            <td>history, museum</td>
+            <td>Abdeen Palace Museum</td>
+            <td>40.1%</td>
+            <td><span class="badge-pass">100.0% PASS</span></td>
+          </tr>
+          <tr>
+            <td>Culture &amp; Heritage</td>
+            <td>culture, architecture</td>
+            <td>Sultan Hassan Mosque</td>
+            <td>25.4%</td>
+            <td><span class="badge-pass">100.0% PASS</span></td>
+          </tr>
+          <tr>
+            <td>Giza Exploration</td>
+            <td>history, archaeology</td>
+            <td>Memphis Open-Air Museum</td>
+            <td>27.0%</td>
+            <td><span class="badge-pass">100.0% PASS</span></td>
+          </tr>
+          <tr>
+            <td>Nature &amp; Relaxation</td>
+            <td>nature, views</td>
+            <td>Al-Azhar Park</td>
+            <td>50.2%</td>
+            <td><span class="badge-pass">100.0% PASS</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="slide-footer">
+      <span>SHTR Final Technical Presentation</span>
+      <span>Slide 8 / 10</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 9: Automated Unittest Suite -->
+  <div class="slide">
+    <div class="slide-header">
+      <div class="slide-subtitle">Quality Assurance</div>
+      <div class="slide-title">Automated Unittest Suite (9 Tests)</div>
+    </div>
+    <div class="slide-body">
+      <div class="grid-2">
+        <div class="content-card">
+          <h3>Functional Test Cases (TC-01 to TC-05)</h3>
+          <ul>
+            <li><strong>TC-01 Normal Recommendation:</strong> Cairo + History + Museum &rarr; Top 3 sorted by similarity <span class="badge-pass">PASS</span></li>
+            <li><strong>TC-02 Low Budget Constraint:</strong> Low budget + Max 2h &rarr; Only Low cost places <span class="badge-pass">PASS</span></li>
+            <li><strong>TC-03 Location Filter:</strong> Giza selected &rarr; Only Giza places <span class="badge-pass">PASS</span></li>
+            <li><strong>TC-04 Wheelchair Accessibility:</strong> Accessible flag checked &rarr; Only accessible places <span class="badge-pass">PASS</span></li>
+            <li><strong>TC-05 Morning Period:</strong> Morning window &rarr; Only Morning/Full Day sites <span class="badge-pass">PASS</span></li>
+          </ul>
+        </div>
+        <div class="content-card">
+          <h3>Edge Cases &amp; Metrics (TC-06 to TC-08)</h3>
+          <ul>
+            <li><strong>TC-06 Popularity Baseline:</strong> No tags selected &rarr; Popularity fallback <span class="badge-pass">PASS</span></li>
+            <li><strong>TC-07 No Matching Results:</strong> Contradictory filters &rarr; Graceful warning banner <span class="badge-pass">PASS</span></li>
+            <li><strong>TC-08 Dynamic Scoring:</strong> Nature + Views &rarr; Dynamic Cosine similarity <span class="badge-pass">PASS</span></li>
+            <li><strong>Metric Check:</strong> Automated FMR verification test &rarr; 100.0% compliance <span class="badge-pass">PASS</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="slide-footer">
+      <span>SHTR Final Technical Presentation</span>
+      <span>Slide 9 / 10</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 10: Conclusion & Roadmap -->
+  <div class="slide">
+    <div class="slide-header">
+      <div class="slide-subtitle">Conclusion</div>
+      <div class="slide-title">Summary &amp; Future Enhancement Roadmap</div>
+    </div>
+    <div class="slide-body">
+      <div class="grid-2">
+        <div class="content-card">
+          <h3>Key Achievements</h3>
+          <ul>
+            <li><strong>Fulfilled D4 Requirements:</strong> Multi-constraint CSP filtering + TF-IDF Cosine Similarity recommendation system.</li>
+            <li><strong>100% Hard Filter Compliance:</strong> Validated via automated test suite across 8 core scenarios.</li>
+            <li><strong>Modular Engineering:</strong> Persistent joblib model artifacts &amp; Streamlit interface.</li>
+          </ul>
+        </div>
+        <div class="content-card">
+          <h3>Future Roadmap</h3>
+          <ul>
+            <li><strong>Live Maps &amp; Geolocation:</strong> Multi-stop route optimization and GPS tracking.</li>
+            <li><strong>Live API Feeds:</strong> Ticket pricing updates &amp; temporary closure feeds.</li>
+            <li><strong>Search Algorithm Itineraries:</strong> A* / Genetic Algorithm multi-day tour planning.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="slide-footer">
+      <span>SHTR Final Technical Presentation</span>
+      <span>Slide 10 / 10</span>
+    </div>
+  </div>
+
+</div>
+
+<!-- Navigation Controls -->
+<div class="nav-controls">
+  <button class="nav-btn" id="prevBtn" onclick="prevSlide()">&larr; Previous</button>
+  <button class="nav-btn" id="nextBtn" onclick="nextSlide()">Next &rarr;</button>
+</div>
+
+<script>
+  let currentSlide = 0;
+  const slides = document.querySelectorAll('.slide');
+
+  function showSlide(index) {
+    slides.forEach((slide, idx) => {
+      slide.classList.toggle('active', idx === index);
+    });
+  }
+
+  function nextSlide() {
+    if (currentSlide < slides.length - 1) {
+      currentSlide++;
+      showSlide(currentSlide);
+    }
+  }
+
+  function prevSlide() {
+    if (currentSlide > 0) {
+      currentSlide--;
+      showSlide(currentSlide);
+    }
+  }
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === 'Space') nextSlide();
+    if (e.key === 'ArrowLeft') prevSlide();
+  });
+</script>
+
+</body>
+</html>
